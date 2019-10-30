@@ -17,11 +17,14 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    
+
+    @Column(name = "first_name")
     private String firstName;
-    
+
+    @Column(name = "last_name")
     private String lastName;
-    
+
+    @Column(name = "birth_year")
     private Integer birthYear;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)

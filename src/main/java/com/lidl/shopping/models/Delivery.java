@@ -18,8 +18,10 @@ public class Delivery {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "delivery_date")
     private Date deliveryDate;
-    
+
+    @Column(name = "price")
     private String price;
     
     @OneToOne

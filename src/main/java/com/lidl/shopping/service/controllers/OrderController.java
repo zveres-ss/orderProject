@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lidl.shopping.models.Order;
+import com.lidl.shopping.persistence.dao.OrderRepository;
 import com.lidl.shopping.persistence.dao.OrderSpringJDBCDao;
 import com.lidl.shopping.service.exceptions.OrderNotFoundException;
 
@@ -31,6 +33,9 @@ public class OrderController {
     
     @Autowired
     private OrderSpringJDBCDao orderDao;
+    
+    @Autowired 
+    private OrderRepository orderRepository;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Order> getOrders() {
@@ -40,13 +45,15 @@ public class OrderController {
     @GetMapping(path="/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Order getOrder(@PathVariable Integer id) {
         
+        // jdbc-based dao
         orderDao.getOrder();
         
-        Order order = orders.get(id);
-        if (order == null) {
+        Optional<Order> order = orderRepository.findById(id);
+        
+        if (order.isEmpty()) {
             throw new OrderNotFoundException("order with id:" + id + " not found");
         }
-        return order;
+        return order.get();
     }
     
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE,
