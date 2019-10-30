@@ -1,9 +1,12 @@
 package com.lidl.shopping.persistence.dao;
 
-import org.springframework.data.repository.CrudRepository;
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.lidl.shopping.models.Order;
 
-public interface OrderRepository extends CrudRepository<Order, Integer> {
+public interface OrderRepository extends JpaRepository<Order, Integer> {
 
+    public List<Order> findByTotalAmountGreaterThan(Double totalAmount);
 }

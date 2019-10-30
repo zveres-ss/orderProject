@@ -50,6 +50,9 @@ public class OrderController {
         
         Optional<Order> order = orderRepository.findById(id);
         
+        //small trash to remove
+        orderRepository.findByTotalAmountGreaterThan(10.0);
+        
         if (order.isEmpty()) {
             throw new OrderNotFoundException("order with id:" + id + " not found");
         }
