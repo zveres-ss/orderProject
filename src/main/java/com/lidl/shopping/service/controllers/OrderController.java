@@ -52,8 +52,12 @@ public class OrderController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public Order createOrder(@RequestBody Order order) {
+        
         order.setId(id.getAndIncrement());
         orders.put(order.getId(), order);
+
+        orderDao.createOrder(order);
+        
         return order;
     }
     
