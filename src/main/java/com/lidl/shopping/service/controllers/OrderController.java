@@ -48,7 +48,7 @@ public class OrderController {
     public Order getOrder(@PathVariable Integer id) {
         
         // jdbc-based dao
-        orderDao.getOrder();
+        //orderDao.getOrder();
         
         Optional<Order> order = orderRepository.findById(id);
         
