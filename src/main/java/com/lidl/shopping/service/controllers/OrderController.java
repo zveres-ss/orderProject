@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lidl.shopping.models.Customer;
 import com.lidl.shopping.models.Order;
+import com.lidl.shopping.persistence.dao.CustomerRepository;
 import com.lidl.shopping.persistence.dao.OrderRepository;
 import com.lidl.shopping.persistence.dao.OrderSpringJDBCDao;
 import com.lidl.shopping.service.exceptions.OrderNotFoundException;
@@ -28,18 +30,18 @@ import com.lidl.shopping.service.exceptions.OrderNotFoundException;
 @RestController
 public class OrderController {
     
-    private static Map<Integer, Order> orders = new HashMap<>();
-    private static AtomicInteger id = new AtomicInteger();
-    
     @Autowired
     private OrderSpringJDBCDao orderDao;
     
     @Autowired 
     private OrderRepository orderRepository;
+    
+    @Autowired
+    private CustomerRepository customerRepository;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Order> getOrders() {
-        return new LinkedList<Order>(orders.values());
+        return orderRepository.findAll();
     }
     
     @GetMapping(path="/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -62,24 +64,30 @@ public class OrderController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public Order createOrder(@RequestBody Order order) {
+       
+        //orderDao.createOrder(order);
         
-        order.setId(id.getAndIncrement());
-        orders.put(order.getId(), order);
-
-        orderDao.createOrder(order);
+        Customer customer = new Customer();
+        customer.setId(1);
+        customer.setFirstName("Lidl");
+        customer.setLastName("the Great");
+        order.setCustomer(customerRepository.save(customer));
         
-        return order;
+        Order storedOrder = orderRepository.save(order);
+        
+        return storedOrder;
     }
     
     @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public Order updateOrder(@RequestBody Order order) {
-        orders.put(order.getId(), order);
-        return order;
+        Order storedOrder = orderRepository.save(order);
+        
+        return storedOrder;
     }
     
     @DeleteMapping(path="/{id}")
     public void deleteOrder(@PathVariable Integer id) {
-        orders.remove(id);
+        orderRepository.deleteById(id);
     }
 }
