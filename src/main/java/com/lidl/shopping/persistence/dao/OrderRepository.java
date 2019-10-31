@@ -9,4 +9,6 @@ import com.lidl.shopping.models.Order;
 public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     public List<Order> findByTotalAmountGreaterThan(Double totalAmount);
+
+    public List<Order> findByCustomerId(Integer customerId);
 }
