@@ -39,7 +39,6 @@ public class Order {
     
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "customer_id")
-    //@JsonBackReference
     @JsonIgnoreProperties("orders")
     private Customer customer;
     

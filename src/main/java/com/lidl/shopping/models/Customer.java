@@ -31,7 +31,6 @@ public class Customer {
     private Integer birthYear;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-    //@JsonManagedReference
     @JsonIgnoreProperties("customer")
     private Set<Order> orders;
     

@@ -8,7 +8,8 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @SpringBootApplication
 @ComponentScan({"com.lidl.shopping.service", 
     "com.lidl.shopping.persistence",
-    "com.lidl.shopping.aspects"})
+    "com.lidl.shopping.aspects",
+    "com.lidl.shopping.logic"})
 @EnableAspectJAutoProxy
 public class ShoppingApplication {
 
