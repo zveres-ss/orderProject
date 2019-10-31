@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 
 import com.lidl.shopping.logic.OrderService;
@@ -25,16 +25,24 @@ public class CustomerController {
     private OrderService orderService; 
     
     @GetMapping(path = "/{customerId}/orders")
-    public List<Order> getAllOrdersForCustomer(@PathVariable Integer customerId) {
+    public CollectionModel<Order> getAllOrdersForCustomer(@PathVariable Integer customerId) {
         List<Order> customerOrders = orderService.getOrdersForCustomer(customerId);
         
-        return customerOrders;
+        for (Order order : customerOrders) {
+            linkTo(methodOn(OrderController.class).getOrder(order.getId())).withSelfRel();
+        }
+        
+        return new CollectionModel<Order>(customerOrders, 
+                linkTo(methodOn(CustomerController.class).getAllOrdersForCustomer(customerId)).withSelfRel());
     }
     
     @GetMapping(path = "/{customerId}")
     public EntityModel<Customer> getCustomer(@PathVariable Integer customerId) {
-        Link link = linkTo(methodOn(CustomerController.class).getCustomer(customerId)).withSelfRel(); 
-        return new EntityModel<Customer>(orderService.getCustomer(customerId), link);
+        return new EntityModel<Customer>(orderService.getCustomer(customerId), createSelfLinkOnCustomer(customerId));
+    }
+
+    protected Link createSelfLinkOnCustomer(Integer customerId) {
+        return linkTo(methodOn(CustomerController.class).getCustomer(customerId)).withSelfRel();
     }
 
 }
