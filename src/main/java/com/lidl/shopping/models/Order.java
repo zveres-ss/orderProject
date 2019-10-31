@@ -16,6 +16,7 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -36,9 +37,10 @@ public class Order {
     @Column(name = "total_amount")
     private Double totalAmount;
     
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "customer_id")
-    @JsonBackReference
+    //@JsonBackReference
+    @JsonIgnoreProperties("orders")
     private Customer customer;
     
     public Order() {
